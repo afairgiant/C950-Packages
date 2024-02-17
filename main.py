@@ -1,4 +1,4 @@
-# Student ID:
+# Student ID: 001574781
 # Author: Alex Fair
 
 import csv
@@ -10,7 +10,9 @@ PACKAGE_FILE = "DeliveryData/Package_list.csv"
 
 
 class Package:
-    def __init__(self, package_id, address, city, state, zipcode, deadline_time, weight, status):
+    def __init__(
+        self, package_id, address, city, state, zipcode, deadline_time, weight, status
+    ):
         self.package_id = package_id
         self.address = address
         self.city = city
@@ -34,38 +36,32 @@ class Package:
             "Delivery Zip Code": self.zipcode,
             "Package Weight": self.weight,
             "Delivery Status": self.status,
-            "Delivery Time": self.delivery_time if self.delivery_time is not None else " "
+            "Delivery Time": (
+                self.delivery_time if self.delivery_time is not None else " "
+            ),
         }
 
 
 # Define a function to read CSV files
 def read_csv(filename):
-    with open(filename, 'r') as csvfile:
+    with open(filename, "r") as csvfile:
         reader = csv.reader(csvfile)
         return list(reader)
 
 
 # Read the distance information file
 CSV_Distance = read_csv(DISTANCE_FILE)
-print(CSV_Distance)
+print(f" Distances \n {CSV_Distance} \n")
+
 # Read the address information file
 CSV_Address = read_csv(ADDRESS_FILE)
-print(CSV_Address)
+print(f" Address \n {CSV_Address} \n")
+
 # Read the package information file
 CSV_Package = read_csv(PACKAGE_FILE)
-print(CSV_Package)
+print(f"Packages \n {CSV_Package} \n")
 
 
-def load_package_data(filename, hash_table):
-    with open(filename, 'r') as csvfile:
-        reader = csv.DictReader(csvfile)  # Use DictReader to automatically handle the headers
-        for row in reader:
-            package_id = row["ID"]
-            address = row["Address"]
-            city = row["City"]
-            state = row["State"]
-            zipcode = row["Zip"]
-            deadline_time = row["Deadline"]
-            weight = row["Weight(kg)"]
-            status = "At the hub"  # Assuming all packages start at the hub; adjust as necessary
-            hash_table.insert(package_id, address, city, state, zipcode, deadline_time, weight, status)
+# Read csv files, and put into hash table
+def loadPackageData(HashTable):
+    pass
