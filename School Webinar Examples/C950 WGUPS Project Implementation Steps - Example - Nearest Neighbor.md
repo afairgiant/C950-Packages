@@ -19,15 +19,15 @@ A) Package data steps:
 
 2-Create Package and Truck objects and have packageCSV and distanceCSV and addressCSV files ready
 
-3-Create loadPackageData(HashTable) to 
+3-Create loadPackageData(HashTable) to
 
-- read packages from packageCSV file (see C950 - Webinar-2 - Getting Greedy, who moved my data  webinar) 
+- read packages from packageCSV file (see C950 - Webinar-2 - Getting Greedy, who moved my data  webinar)
 
 - update Package object
 
 - insert Package object into HashTable with the key=PackageID and Item=Package
 
- 
+
 
 B) Distance data steps:
 

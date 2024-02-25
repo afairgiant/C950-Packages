@@ -42,6 +42,33 @@ class Package:
         }
 
 
+class Truck:
+    def __init__(
+        self,
+        load,
+        maxLoad,
+        speed,
+        currentLocation,
+        hub,
+    ):
+        self.hub = hub
+        self.speed = speed
+        self.load = load
+        self.maxLoad = maxLoad
+        self.currentLocation = currentLocation
+
+
+# Hashtable class with Chaining
+class ChainingHashTable:
+    # Constructor with optional initial capacity parameter.
+    # Assigns all buckets with an empty list.
+    def __init__(self, initial_capacity=40):
+        # initialize the hash table with empty bucket list entries.
+        self.table = []
+        for i in range(initial_capacity):
+            self.table.append([])
+
+
 # Define a function to read CSV files
 def read_csv(filename):
     with open(filename, "r") as csvfile:
@@ -60,6 +87,9 @@ print(f" Address \n {CSV_Address} \n")
 # Read the package information file
 CSV_Package = read_csv(PACKAGE_FILE)
 print(f"Packages \n {CSV_Package} \n")
+
+# Initate hash table
+HashTable = ChainingHashTable()
 
 
 # Read csv files, and put into hash table
