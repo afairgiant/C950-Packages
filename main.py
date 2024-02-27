@@ -3,70 +3,14 @@
 
 import csv
 
+from hashtable import ChainingHashTable
+from package import Package
+from truck import Truck
+
 # Define file path constants
 DISTANCE_FILE = "DeliveryData/Distance_table.csv"
 ADDRESS_FILE = "DeliveryData/Address_list.csv"
 PACKAGE_FILE = "DeliveryData/Package_list.csv"
-
-
-class Package:
-    def __init__(
-        self, package_id, address, city, state, zipcode, deadline_time, weight, status
-    ):
-        self.package_id = package_id
-        self.address = address
-        self.city = city
-        self.state = state
-        self.zipcode = zipcode
-        self.deadline_time = deadline_time
-        self.weight = weight
-        self.status = status  # At hub, loaded, en route, delivered
-        self.delivery_time = None  # Only used when delivered.
-
-    def status_update(self):
-        pass
-
-    # Will need to update status throughout
-
-    def lookup_package_info(self):
-        return {
-            "Delivery Address": self.address,
-            "Delivery Deadline": self.deadline_time,
-            "Delivery City": self.city,
-            "Delivery Zip Code": self.zipcode,
-            "Package Weight": self.weight,
-            "Delivery Status": self.status,
-            "Delivery Time": (
-                self.delivery_time if self.delivery_time is not None else " "
-            ),
-        }
-
-
-class Truck:
-    def __init__(
-        self,
-        load,
-        maxLoad,
-        speed,
-        currentLocation,
-        hub,
-    ):
-        self.hub = hub
-        self.speed = speed
-        self.load = load
-        self.maxLoad = maxLoad
-        self.currentLocation = currentLocation
-
-
-# Hashtable class with Chaining
-class ChainingHashTable:
-    # Constructor with optional initial capacity parameter.
-    # Assigns all buckets with an empty list.
-    def __init__(self, initial_capacity=40):
-        # initialize the hash table with empty bucket list entries.
-        self.table = []
-        for i in range(initial_capacity):
-            self.table.append([])
 
 
 # Define a function to read CSV files
@@ -78,20 +22,50 @@ def read_csv(filename):
 
 # Read the distance information file
 CSV_Distance = read_csv(DISTANCE_FILE)
-print(f" Distances \n {CSV_Distance} \n")
+# print(f" Distances \n {CSV_Distance} \n")
 
 # Read the address information file
 CSV_Address = read_csv(ADDRESS_FILE)
-print(f" Address \n {CSV_Address} \n")
+# print(f" Address \n {CSV_Address} \n")
 
 # Read the package information file
-CSV_Package = read_csv(PACKAGE_FILE)
-print(f"Packages \n {CSV_Package} \n")
+Package_Data = read_csv(PACKAGE_FILE)
+# print(f"Packages \n {Package_Data} \n")
 
-# Initate hash table
-HashTable = ChainingHashTable()
+# Initiate hash table
+PackageHashTable = ChainingHashTable()
 
 
 # Read csv files, and put into hash table
-def loadPackageData(HashTable):
-    pass
+def loadPackageData(Package_Data, PackageHashTable):
+    print("loadPackageData called with {} packages".format(len(Package_Data)))
+    # CSV_Package
+    for package in Package_Data[1:]:
+        package_id = int(package[0])
+        address = package[1]
+        city = package[2]
+        state = package[3]
+        zipcode = package[4]
+        deadline_time = package[5]
+        weight = package[6]  # in KG
+        status = "At Hub"
+        note = package[7]
+
+        # Package Object
+        package_object = Package(
+            package_id,
+            address,
+            city,
+            state,
+            zipcode,
+            deadline_time,
+            weight,
+            status,
+            note,
+        )
+        print(f"package {package_object}")
+        # Add each package to hash table
+        PackageHashTable.insert(package_id, package_object)
+
+
+print(PackageHashTable.print_table())

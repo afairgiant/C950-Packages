@@ -1,6 +1,17 @@
 # Class representing packages
 class Package:
-    def __init__(self, package_id, address, city, state, zipcode, deadline_time, weight, status):
+    def __init__(
+        self,
+        package_id,
+        address,
+        city,
+        state,
+        zipcode,
+        deadline_time,
+        weight,
+        status,
+        note,
+    ):
         self.package_id = package_id
         self.address = address
         self.city = city
@@ -10,9 +21,24 @@ class Package:
         self.weight = weight
         self.status = status  # At hub, loaded, en route, delivered
         self.delivery_time = None  # Only used when delivered.
+        self.note = note
+
+    def __str__(self):
+        return "%s, %s, %s, %s, %s, %s, %s, %s, %s" % (
+            self.package_id,
+            self.address,
+            self.city,
+            self.state,
+            self.zipcode,
+            self.deadline_time,
+            self.weight,
+            self.delivery_time,
+            self.status,
+        )
 
     def status_update(self):
         pass
+
     # Will need to update status throughout
 
     def lookup_package_info(self):
@@ -23,5 +49,9 @@ class Package:
             "Delivery Zip Code": self.zipcode,
             "Package Weight": self.weight,
             "Delivery Status": self.status,
-            "Delivery Time": self.delivery_time if self.delivery_time is not None else " "
+            "Delivery Time": (
+                self.delivery_time if self.delivery_time is not None else " "
+            ),
         }
+
+    # Create package object that will be inserted into the hash table

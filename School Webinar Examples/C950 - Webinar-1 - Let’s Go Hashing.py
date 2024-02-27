@@ -82,7 +82,7 @@ class ChainingHashTable:
         # get the bucket list where this item will be removed from.
         bucket = hash(key) % len(self.table)
         bucket_list = self.table[bucket]
- 
+
         # remove the item from the bucket list if it is present.
         if key in bucket_list:
             bucket_list.remove(key)
