@@ -24,16 +24,16 @@ class Package:
         self.note = note
 
     def __str__(self):
-        return "%s, %s, %s, %s, %s, %s, %s, %s, %s" % (
-            self.package_id,
-            self.address,
-            self.city,
-            self.state,
-            self.zipcode,
-            self.deadline_time,
-            self.weight,
-            self.delivery_time,
-            self.status,
+        return (
+            f"{self.package_id}, "
+            f"{self.address}, "
+            f"{self.city}, "
+            f"{self.state}, "
+            f"{self.zipcode}, "
+            f"{self.deadline_time}, "
+            f"{self.weight}, "
+            f"{self.delivery_time}, "
+            f"{self.status}"
         )
 
     def status_update(self):

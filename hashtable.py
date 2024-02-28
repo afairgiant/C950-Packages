@@ -16,7 +16,7 @@ class ChainingHashTable:
         bucket_list = self.table[bucket]
 
         # Debug print
-        print(f"Inserting item with key {key} into bucket {bucket}")
+        print(f"    DEBUG: Inserting item with key {key} into bucket {bucket}")
 
         # update key if it is already in the bucket
         for kv in bucket_list:
@@ -57,6 +57,7 @@ class ChainingHashTable:
                 bucket_list.remove([kv[0], kv[1]])
 
     def print_table(self):
+        # Debug Printing after inserting into buckets
         for index, bucket in enumerate(self.table):
             if bucket:  # If the bucket is not empty
                 print(f"Bucket {index}: {bucket}")

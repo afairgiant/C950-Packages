@@ -5,9 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2e7d02f8-3f44-4390-8ba6-cee9de26ca0b" name="Changes" comment="CSV read method creation">
+      <change afterPath="$PROJECT_DIR$/.idea/csv-editor.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/C950-Task1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/C950-Task1.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/C950_Task-1_AF.docx" beforeDir="false" afterPath="$PROJECT_DIR$/C950_Task-1_AF.docx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/School Webinar Examples/C950 - Webinar-1 - Let’s Go Hashing.py" beforeDir="false" afterPath="$PROJECT_DIR$/School Webinar Examples/C950 - Webinar-1 - Let’s Go Hashing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DeliveryData/Address_List.csv" beforeDir="false" afterPath="$PROJECT_DIR$/DeliveryData/Address_List.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DeliveryData/Distance_table.csv" beforeDir="false" afterPath="$PROJECT_DIR$/DeliveryData/Distance_table.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hashtable.py" beforeDir="false" afterPath="$PROJECT_DIR$/hashtable.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/package.py" beforeDir="false" afterPath="$PROJECT_DIR$/package.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/truck.py" beforeDir="false" afterPath="$PROJECT_DIR$/truck.py" afterDir="false" />
@@ -31,7 +36,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
@@ -47,6 +52,7 @@
     "Python.main.executor": "Run",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
     "last_opened_file_path": "C:/Users/Alex/Documents/School/WGU/C950 -/C950-Packages",
@@ -55,6 +61,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "reference.settingsdialog.IDE.editor.colors.CSV/TSV/PSV",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -106,6 +113,8 @@
       <workItem from="1706746730471" duration="45000" />
       <workItem from="1707075564004" duration="4339000" />
       <workItem from="1708982998489" duration="2087000" />
+      <workItem from="1709143262128" duration="201000" />
+      <workItem from="1709143476000" duration="9712000" />
     </task>
     <task id="LOCAL-00001" summary="CSV read method creation">
       <option name="closed" value="true" />

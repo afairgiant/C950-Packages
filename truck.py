@@ -1,14 +1,13 @@
 # Class represent delivery Trucks
 
-
 class Truck:
-    def __init__(self, capacity, load, mileage, location, speed, depart_time):
-        self.capacity = (capacity,)
-        self.load = (load,)
-        self.mileage = (mileage,)
-        self.location = (location,)
-        self.speed = (speed,)
-        self.depart_time = (depart_time,)
+    def __init__(self, capacity, speed, load, mileage, location, departure_time):
+        self.capacity = capacity, # Max number of packages
+        self.speed = speed, # Constant speed of 18 mph per Task instructions
+        self.load = load, # Current packages
+        self.mileage = mileage, # Driven miles, increase with each delivery
+        self.location = location, # Latest drop off location
+        self.departure_time = departure_time # Time to leave hub
 
-    # def __str__(self):
-    #     return "%s, %s, %s, %s, %s, %s" (self.capacity, self.load, self.mileage, self.location, self.speed, self.depart_time)
+    def __str__(self):
+        return f"{self.capacity} - {self.load} - {self.mileage} - {self.location} - {self.speed} - {self.departure_time}"
