@@ -11,6 +11,7 @@ class Package:
         weight,
         status,
         note,
+        destination_index,
     ):
         self.package_id = package_id
         self.address = address
@@ -22,6 +23,8 @@ class Package:
         self.status = status  # At hub, loaded, en route, delivered
         self.delivery_time = None  # Only used when delivered.
         self.note = note
+        self.destination_index = int(destination_index)
+
 
     def __str__(self):
         return (
@@ -31,9 +34,10 @@ class Package:
             f"{self.state}, "
             f"{self.zipcode}, "
             f"{self.deadline_time}, "
-            f"{self.weight}, "
+            f"Weight:{self.weight}, "
             f"{self.delivery_time}, "
-            f"{self.status}"
+            f"Status: {self.status}, "
+            f"Dest Index: {self.destination_index}"
         )
 
     def status_update(self):
@@ -42,16 +46,13 @@ class Package:
     # Will need to update status throughout
 
     def lookup_package_info(self):
-        return {
-            "Delivery Address": self.address,
-            "Delivery Deadline": self.deadline_time,
-            "Delivery City": self.city,
-            "Delivery Zip Code": self.zipcode,
-            "Package Weight": self.weight,
-            "Delivery Status": self.status,
-            "Delivery Time": (
-                self.delivery_time if self.delivery_time is not None else " "
-            ),
-        }
-
-    # Create package object that will be inserted into the hash table
+        return (
+            f"Package ID: {self.package_id}\n"
+            f"Delivery Address: {self.address}\n"
+            f"Delivery Deadline: {self.deadline_time}\n"
+            f"Delivery City: {self.city}\n"
+            f"Delivery Zip Code: {self.zipcode}\n"
+            f"Package Weight: {self.weight}\n"
+            f"Delivery Status: {self.status}\n"
+            f"Delivery Time: {self.delivery_time if self.delivery_time is not None else ' '}\n"
+            )

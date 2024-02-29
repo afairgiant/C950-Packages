@@ -1,5 +1,4 @@
 # Hashtable class with Chaining
-# noinspection DuplicatedCode
 class ChainingHashTable:
     # Constructor with optional initial capacity parameter.
     # Assigns all buckets with an empty list.
