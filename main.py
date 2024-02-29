@@ -3,7 +3,7 @@
 
 import csv
 import datetime
-from tkinter import FALSE
+from tkinter import FALSE, TRUE
 
 from hashtable import ChainingHashTable
 from package import Package
@@ -90,9 +90,67 @@ Truck2_Departure = datetime.timedelta(hours=10)
 Truck3_Departure = datetime.timedelta(hours=10)
 
 # Create Trucks
-truck1 = Truck.Truck({TruckCapacity}, {TruckSpeed}, {Truck1_Load}, 0.0, 1, {Truck1_Departure})
-truck2 = Truck.Truck({TruckCapacity}, {TruckSpeed}, {Truck2_Load}, 0.0, 1, {Truck2_Departure})
-truck3 = Truck.Truck({TruckCapacity}, {TruckSpeed}, {Truck3_Load}, 0.0, 1, {Truck3_Departure})
+truck1 = Truck(TruckCapacity, TruckSpeed, Truck1_Load, 0.0, 1, Truck1_Departure)
+# print(f"Truck #1 {truck1}")
+truck2 = Truck(TruckCapacity, TruckSpeed, Truck2_Load, 0.0, 1, Truck2_Departure)
+# print(f"Truck #2 {truck2}")
+truck3 = Truck(TruckCapacity, TruckSpeed, Truck3_Load, 0.0, 1, Truck3_Departure)
+
+
+# print(f"Truck #3 {truck3}")
+
+# Function to convert CSV data into a 2D list
+def loadDistanceData(file_path):
+    with open(file_path, 'r') as file:
+        lines = file.readlines()
+
+    # Determine the number of points
+    header = lines[0].strip().split(',')
+    num_points = len(header) - 1  # Exclude the ID column
+
+    # Initialize a 2D list with zeros
+    distance_matrix = [[0.0 for _ in range(num_points)] for _ in range(num_points)]
+
+    # Process each line (excluding the header) to fill the 2D list
+    for line in lines[1:]:  # Skip header
+        row = line.strip().split(',')
+        point_id = int(row[0]) - 1  # Adjust for 0-indexing
+
+        for i in range(1, len(row)):
+            if row[i]:  # If there's a distance value
+                distance = float(row[i])
+                distance_matrix[point_id][i - 1] = distance
+                distance_matrix[i - 1][point_id] = distance  # Mirror the distance for bi-directionality
+
+    return distance_matrix
+
+
+def loadAddressData(file_path):
+    addressData = []
+    try:
+        with open(file_path, 'r', encoding='utf-8') as file:
+            headers = file.readline().strip().split(',')
+            for line in file:
+                values = line.strip().split(',')
+                row_data = {header: value for header, value in zip(headers, values)}
+                addressData.append(row_data)
+    except FileNotFoundError:
+        print(f"Error: The file {file_path} was not found.")
+        return []  # Return an empty list or handle the error as appropriate
+
+    return addressData
+
+try:
+    distanceData = loadDistanceData(DISTANCE_FILE)
+    print(distanceData)
+except Exception as e:
+    print(f"AN error occurred: {e}")
+
+try:
+    addressData = loadAddressData(ADDRESS_FILE)
+    print(addressData)
+except Exception as e:
+    print(f"An error occurred: {e}")
 
 
 # Method that will sort the packages in each truck using nearest neighbor
@@ -110,9 +168,9 @@ def optimising_delivery(truck):
     # Algorithm to sort the packages
     # Find package closest to the hub and start from there
     # Then find the nearest one from there. Give an error of total miles is > 140
-    print("Sorting Packages")
+    if Debug:
+        print("Sorting Packages")
 
-    #while
 
 class Main:
     print("Western Governors University Parcel Service (WGUPS)")
