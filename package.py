@@ -1,17 +1,20 @@
 # Class representing packages
+from datetime import timedelta
+
+
 class Package:
     def __init__(
-        self,
-        package_id,
-        address,
-        city,
-        state,
-        zipcode,
-        deadline_time,
-        weight,
-        status,
-        note,
-        destination_index,
+            self,
+            package_id,
+            address,
+            city,
+            state,
+            zipcode,
+            deadline_time,
+            weight,
+            status,
+            note,
+            destination_index,
     ):
         self.package_id = package_id
         self.address = address
@@ -24,7 +27,6 @@ class Package:
         self.delivery_time = None  # Only used when delivered.
         self.note = note
         self.destination_index = int(destination_index)
-
 
     def __str__(self):
         return (
@@ -40,12 +42,16 @@ class Package:
             f"Dest Index: {self.destination_index}"
         )
 
-    def status_update(self):
-        pass
-
+    def status_update(self, current_datetime):
+        if current_datetime > self.delivery_time:
+            self.status = "Delivered"
+        elif self.delivery_time > current_datetime > (self.delivery_time - timedelta(hours=8)):
+            self.status = "En Route"
+        else:
+            self.status = "At Hub"
     # Will need to update status throughout
 
-    def lookup_package_info(self):
+    def packageLookup(self):
         return (
             f"Package ID: {self.package_id}\n"
             f"Delivery Address: {self.address}\n"
@@ -55,4 +61,4 @@ class Package:
             f"Package Weight: {self.weight}\n"
             f"Delivery Status: {self.status}\n"
             f"Delivery Time: {self.delivery_time if self.delivery_time is not None else ' '}\n"
-            )
+        )

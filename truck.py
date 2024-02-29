@@ -3,7 +3,7 @@
 
 class Truck:
     def __init__(self, Id, capacity, speed, load, mileage, location, departure_time):
-        self.Id = Id # Truck ID number
+        self.Id = Id  # Truck ID number
         self.capacity = capacity  # Max number of packages
         self.speed = speed  # Constant speed of 18 mph per Task instructions
         self.load = load  # Current packages

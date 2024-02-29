@@ -3,7 +3,6 @@
 
 import csv
 import datetime
-from tkinter import FALSE, TRUE
 
 from hashtable import ChainingHashTable
 from package import Package
@@ -14,7 +13,7 @@ DISTANCE_FILE = "DeliveryData/Distance_table.csv"
 ADDRESS_FILE = "DeliveryData/Address_list.csv"
 PACKAGE_FILE = "DeliveryData/Package_list.csv"
 
-Debug = TRUE
+Debug = False
 
 
 # Define a function to read CSV files
@@ -45,8 +44,18 @@ PackageHashTable = ChainingHashTable()
 
 # Read package csv file, and put into hash table
 def loadPackageData(packageFile, hashtable):
+    """
+    Load package data from a file and insert it into the hashtable.
+
+    Args:
+    packageFile (str): The file containing package data.
+    hashtable (HashTable): The hashtable to insert the package data into.
+    """
+
+    # Create a map of address to id
     address_id_map = {address_data['Address']: address_data['Id'] for address_data in addressData}
 
+    # Open the package file and read the data
     with open(packageFile) as packageList:
         packageData = csv.reader(packageList, delimiter=",")
         next(packageData)  # skip header
@@ -61,10 +70,11 @@ def loadPackageData(packageFile, hashtable):
             status = "At Hub"
             note = package[7]
 
+            # Get the destination index from the address_id_map
             destination_index = int(99999999)
             destination_index = address_id_map.get(address, destination_index)
 
-            # Package Object
+            # Create a Package object
             package_object = Package(
                 package_id,
                 address,
@@ -80,7 +90,7 @@ def loadPackageData(packageFile, hashtable):
             # Debug print each package enter
             if Debug:
                 print(f"    DEBUG: package {package_object}")
-            print(f"Inserting package: {package_object.package_id}")
+            #print(f"Inserting package: {package_object.package_id}")
             # Add each package to hash table
             hashtable.insert(package_id, package_object)
 
@@ -197,62 +207,180 @@ def distanceBetween(index1, index2, distance_data):
     except Exception as e:
         print(f"    ERROR: An error occurred: {str(e)}")
         raise e
+def optimized_delivery(truck, distance_data):
+    """
+    Optimize the delivery route for the given truck using the distance data.
+
+    Args:
+    truck: Truck object representing the delivery truck
+    distance_data: Dictionary containing distance data between locations
+
+    Returns:
+    None
+    """
+    # Print truck start message
+    print(f"Starting Truck#{truck.Id}")
+
+    # Convert truck load to package objects
+    unsorted_packages = [PackageHashTable.search(package_id) for package_id in truck.load]
+    truck.load.clear()  # Clear the truck's load for re-loading sorted packages
+    for package in unsorted_packages:
+        package.status = "En Route"  # Update package status to "En Route"
+    while unsorted_packages:
+        # Find the next closest package to the current truck location
+        closest_package, closest_distance = find_closest_package(truck.location, unsorted_packages, distance_data)
+
+        # Update truck and package status based on delivery
+        deliver_package(truck, closest_package, closest_distance)
+
+        # Remove the delivered package from unsorted list
+        unsorted_packages.remove(closest_package)
+    if Debug:
+    # Print truck end message with mileage
+        print(f"Truck# {truck.Id} - Mileage: {truck.mileage}")
+
+
+def find_closest_package(current_location, packages, distance_data):
+    """
+    Find the closest package to the current location.
+
+    Args:
+    current_location (int): The current location index.
+    packages (list): List of package objects.
+    distance_data (dict): Dictionary containing distance data.
+
+    Returns:
+    tuple: The closest package and the distance to it.
+    """
+    closest_package = None  # Initialize the closest package
+    closest_distance = float('inf')  # Initialize with infinity
+
+    for package in packages:
+        distance = distanceBetween(current_location, package.destination_index, distance_data)
+        if distance < closest_distance:
+            closest_package, closest_distance = package, distance
+
+    return closest_package, closest_distance
+
+
+def deliver_package(truck, package, distance):
+    """
+    Delivers a package using a truck and updates relevant information.
+
+    Args:
+    truck (Truck): The truck used for delivery
+    package (Package): The package to be delivered
+    distance (float): The distance to be traveled for delivery
+    """
+    # Add distance to truck's mileage
+    truck.mileage += distance
+
+    # Update truck's location to package's destination
+    truck.location = package.destination_index
+
+    # Calculate and update delivery time
+    delivery_time = calculate_delivery_time(distance, truck.speed)
+    truck.time += delivery_time
+
+    # Update package status and delivery time
+    package.delivery_time = truck.time
+    package.status = "Delivered"
+
+    # Print delivered package information
+    if Debug:
+        print(f"Delivered Package {package.packageLookup()}")
+
+def calculate_delivery_time(distance, speed):
+    """Calculate delivery time given distance and speed, returning a timedelta object."""
+    return datetime.timedelta(hours=distance / speed)
+
 
 
 # Method that will sort the packages in each truck using nearest  algorithm
-def optimized_delivery(truck):
-    print(f"Starting Truck#{truck.Id}")
-    # Pull packages from each truck as unsorted array
-    print(f"Truck Load: {truck.load}")
-    unsorted_packages = []
-    # Pulls packages set for said truck and puts them into an array for the algorithm.
-    for package_id in truck.load:
-        # print(package_id)
-        package = PackageHashTable.search(package_id)
-        print(f"{package} \n")
-        unsorted_packages.append(package)
-
-    truck.load.clear()  # Empties truck after they've been loaded into unsorted_packages array, so it can be filled
-    print("Trucks unsorted load cleared")  # after sorting.
-
-    # Algorithm to sort the packages
-    # Find package closest to the hub and start from there
-    # Then find the nearest one from there. Give an error of total miles is > 140
-    if Debug:
-        print("Sorting Packages")
-    while len(unsorted_packages) > 0:
-        closest_package = unsorted_packages[0]
-        next_address = int(0)
-        if Debug:
-            print("Closest Package: " + str(closest_package.lookup_package_info()))
-        for package in unsorted_packages:
-            if Debug:
-                print("Package: " + str(package))
-            if distanceBetween(truck.location, package.destination_index, distanceData) < distanceBetween(truck.location, closest_package.destination_index, distanceData):
-                next_address = distanceBetween(package.destination_index, closest_package.destination_index, distanceData)
-                print(next_address)
-                closest_package = package
-        truck.load.append(closest_package.package_id)  # Loads closest package onto truck
-        unsorted_packages.remove(closest_package)  # Removes closest package from unsorted array after delivery
-        truck.mileage += next_address  # Adds distance between the closest package and current location
-        truck.location = closest_package.destination_index  # Changes current location to the closest package location after delivery
-        truck.time += datetime.timedelta(hours=next_address/truck.speed)  # Adds time to delivery
-        closest_package.delivery_time = truck.time  # Sets delivery time of current package
-        closest_package.status = "Delivered"  # Sets status to delivered
-        print(f"Package {closest_package.lookup_package_info()} \n")
-    print(f"Truck# {truck.Id} - Milage: {truck.mileage}")
+# def optimized_delivery(truck):
+#     print(f"Starting Truck#{truck.Id}")
+#     # Pull packages from each truck as unsorted array
+#     print(f"Truck Load: {truck.load}")
+#     unsorted_packages = []
+#     # Pulls packages set for said truck and puts them into an array for the algorithm.
+#     for package_id in truck.load:
+#         # print(package_id)
+#         package = PackageHashTable.search(package_id)
+#         print(f"{package} \n")
+#         unsorted_packages.append(package)
+#
+#     truck.load.clear()  # Empties truck after they've been loaded into unsorted_packages array, so it can be filled
+#     print("Trucks unsorted load cleared")  # after sorting.
+#
+#     # Algorithm to sort the packages
+#     # Find package closest to the hub and start from there
+#     # Then find the nearest one from there. Give an error of total miles is > 140
+#     if Debug:
+#         print("Sorting Packages")
+#     while len(unsorted_packages) > 0:
+#         closest_package = unsorted_packages[0]
+#         next_address = int(0)
+#         if Debug:
+#             print("Closest Package: " + str(closest_package.lookup_package_info()))
+#         for package in unsorted_packages:
+#             if Debug:
+#                 print("Package: " + str(package))
+#             if distanceBetween(truck.location, package.destination_index, distanceData) < distanceBetween(truck.location, closest_package.destination_index, distanceData):
+#                 next_address = distanceBetween(package.destination_index, closest_package.destination_index, distanceData)
+#                 print(next_address)
+#                 closest_package = package
+#         truck.load.append(closest_package.package_id)  # Loads closest package onto truck
+#         unsorted_packages.remove(closest_package)  # Removes closest package from unsorted array after delivery
+#         truck.mileage += next_address  # Adds distance between the closest package and current location
+#         truck.location = closest_package.destination_index  # Changes current location to the closest package location after delivery
+#         truck.time += datetime.timedelta(hours=next_address/truck.speed)  # Adds time to delivery
+#         closest_package.delivery_time = truck.time  # Sets delivery time of current package
+#         closest_package.status = "Delivered"  # Sets status to delivered
+#         print(f"Package {closest_package.lookup_package_info()} \n")
+#     print(f"Truck# {truck.Id} - Milage: {truck.mileage}")
 
 class Main:
-    print("Western Governors University Parcel Service (WGUPS)")
-    print("Loading Package Data \n")
-
     # Load CSV_Package into hash table
     loadPackageData(PACKAGE_FILE, PackageHashTable)
-    optimized_delivery(truck1)
-    #optimized_delivery(truck2)
+    optimized_delivery(truck1, distanceData)
+    optimized_delivery(truck2, distanceData)
     Truck3_Departure = min(truck1.time, truck2.time)  # Keep truck 3 at Hub until truck or Truck 1 Finish
-    #optimized_delivery(truck3)
-    print(truck1.mileage)
-    print(truck2.mileage)
-    print(truck3.mileage)
-    # print(PackageHashTable.print_table())
+    # print(Truck3_Departure)
+    optimized_delivery(truck3, distanceData)
+
+    print("\nWestern Governors University Parcel Service (WGUPS)")
+    print("Loading Package Data")
+
+    print(f"Total Mileage: {truck1.mileage + truck2.mileage + truck3.mileage}")
+    print(f"Truck 1 Mileage: {truck1.mileage}")
+    print(f"Truck 2 Mileage: {truck2.mileage}")
+    print(f"Truck 3 Mileage: {truck3.mileage}")
+
+    # loop until user is satisfied
+    isExit = True
+    while isExit:
+        print("\nPackage Lookup\n")
+
+        print("1. Package Lookup by ID")
+        print("2. Package Lookup by Time")
+        print("3. Exit Program")
+        user_input = input("Enter 1, 2, or 3: ")
+        if user_input == "1":
+            print("Please Enter a time for the lookup. In format HH:MM:SS \n example: 12:00:00")
+            time_input = input()
+            hours, minutes, seconds = map(int, time_input.split(':'))
+            time_delta = datetime.timedelta(hours=hours, minutes=minutes, seconds=seconds)
+            print(time_delta)
+            print("Enter Package ID Number")
+            package_id = int(input())
+            package = PackageHashTable.search(package_id)
+            if package:
+                package.status_update(time_delta)
+                print(package.packageLookup())
+                input("Press Enter to Continue...")
+            else:
+                print("Package Not Found")
+        if user_input == "2":
+            timeLookup(PackageHashTable)
+        if user_input == "3":
+            isExit = False

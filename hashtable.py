@@ -15,7 +15,7 @@ class ChainingHashTable:
         bucket_list = self.table[bucket]
 
         # Debug print
-        print(f"    DEBUG: Inserting item with key {key} into bucket {bucket}")
+        #print(f"    DEBUG: Inserting item with key {key} into bucket {bucket}")
 
         # update key if it is already in the bucket
         for kv in bucket_list:
