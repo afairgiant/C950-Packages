@@ -16,6 +16,7 @@ class Package:
             note,
             destination_index,
             truck,
+            loadTime
     ):
         self.package_id = package_id
         self.address = address
@@ -29,6 +30,7 @@ class Package:
         self.note = note
         self.destination_index = int(destination_index)
         self.truck = None # Only used when loaded
+        self.loadTime = None
 
     def __str__(self):
         return (
@@ -45,12 +47,21 @@ class Package:
         )
 
     def status_update(self, current_datetime):
-        if current_datetime > self.delivery_time:
-            self.status = "Delivered"
-        elif current_datetime > timedelta(hours=8) and current_datetime < self.delivery_time:
-            self.status = "En Route"
-        else:
+        loadTime = self.loadTime
+        #print(self.delivery_time)
+        #print(self.loadTime)
+        #print(current_datetime)
+        # Update package status
+        if current_datetime < loadTime:
             self.status = "At Hub"
+        elif current_datetime == loadTime:
+            self.status = "Loaded on " + self.truck
+        elif loadTime < current_datetime < self.delivery_time:
+            self.status = "En Route on " + self.truck
+        elif current_datetime > self.delivery_time:
+            self.status = "Delivered"
+        else:
+            self.status = "Contact Support"
 
     def packageLookup(self):
         return (
@@ -76,14 +87,15 @@ class Package:
         return report_DeliveryTime
     def packageReport(self, reportType, current_datetime):
         # Report package status
+        reportDelivery = self.reportDeliveryTime(current_datetime)
+        self.status_update(current_datetime)
+
         if reportType == "status":
-            reportDelivery = self.reportDeliveryTime(current_datetime)
-            reportStatus = (self.status_update(current_datetime))
             return (
-                f"Package Report for package #{self.package_id}\n"
+                f"\033[4mPackage Report for package #{self.package_id}\033[0m\n"
                 f"Package ID: {self.package_id}\n"
-                f"Delivery Address: {self.address}\n"
                 f"Delivery Deadline: {self.deadline_time}\n"
+                f"Delivery Address: {self.address}\n"
                 f"Delivery City: {self.city}\n"
                 f"Delivery Zip Code: {self.zipcode}\n"
                 f"Package Weight: {self.weight}\n"
@@ -91,6 +103,8 @@ class Package:
                 f"{reportDelivery}"
             )
         elif reportType == "time":
-            pass
+            return (
+                f"Package ID: {self.package_id} Delivery Status: {self.status}. {reportDelivery}"
+            )
         else:
             pass

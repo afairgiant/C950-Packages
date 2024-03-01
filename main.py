@@ -13,8 +13,8 @@ DISTANCE_FILE = "DeliveryData/Distance_table.csv"
 ADDRESS_FILE = "DeliveryData/Address_list.csv"
 PACKAGE_FILE = "DeliveryData/Package_list.csv"
 
+# Set debug mode for print statements
 Debug = False
-
 
 # Define a function to read CSV files
 def read_csv(filename):
@@ -69,7 +69,8 @@ def loadPackageData(packageFile, hashtable):
             weight = package[6]  # in KG
             status = "At Hub"
             note = package[7]
-            truck = None
+            truck = None  # Set to empty string
+            loadTime = None  # Set to empty string
 
             # Get the destination index from the address_id_map
             destination_index = int(99999999)
@@ -87,7 +88,8 @@ def loadPackageData(packageFile, hashtable):
                 status,
                 note,
                 destination_index,
-                truck
+                truck,
+                loadTime
             )
             # Debug print each package enter
             if Debug:
@@ -177,13 +179,12 @@ def loadAddressData(file_path):
 
 try:
     distanceData = loadDistanceData(DISTANCE_FILE)
-    print(distanceData)
-except Exception as e:
-    print(f"AN error occurred: {e}")
-
-try:
     addressData = loadAddressData(ADDRESS_FILE)
-    print(addressData)
+    if Debug:
+        print(distanceData)
+        print(addressData)
+except FileNotFoundError as e:
+    print(f"Error: The file {e.filename} was not found.")
 except Exception as e:
     print(f"An error occurred: {e}")
 
@@ -228,7 +229,8 @@ def optimized_delivery(truck, distance_data):
     truck.load.clear()  # Clear the truck's load for re-loading sorted packages
     for package in unsorted_packages:
         package.status = "En Route"  # Update package status to "En Route"
-        package.truck = f"Truck#: {truck.Id}"  # Update package's truck ID
+        package.truck = f"Truck #{truck.Id}"  # Update package's truck ID
+        package.loadTime = truck.departure_time  # Update package's load time
     while unsorted_packages:
         # Find the next closest package to the current truck location
         closest_package, closest_distance = find_closest_package(truck.location, unsorted_packages, distance_data)
@@ -258,12 +260,12 @@ def find_closest_package(current_location, packages, distance_data):
     closest_package = None  # Initialize the closest package
     closest_distance = float('inf')  # Initialize with infinity
 
-    for package in packages:
-        distance = distanceBetween(current_location, package.destination_index, distance_data)
-        if distance < closest_distance:
-            closest_package, closest_distance = package, distance
+    for package in packages:  # Iterate over the list of packages
+        distance = distanceBetween(current_location, package.destination_index, distance_data)  # Calculate the distance
+        if distance < closest_distance:  # Update the closest package and distance
+            closest_package, closest_distance = package, distance  # Update the closest package
 
-    return closest_package, closest_distance
+    return closest_package, closest_distance  # Return the closest package
 
 
 def deliver_package(truck, package, distance):
@@ -297,7 +299,38 @@ def calculate_delivery_time(distance, speed):
     """Calculate delivery time given distance and speed, returning a timedelta object."""
     return datetime.timedelta(hours=distance / speed)
 
+def get_time_input():
+    """
+    A function that prompts the user to input a time in the format HH:MM:SS,
+    validates the input, and returns a datetime.timedelta object representing the input time.
+    """
+    print("Please Enter a time for the lookup. In format HH:MM:SS \n example: 12:00:00")
+    while True:  # Loop until a valid time is entered
+        try:  # Try to convert the input to a datetime.timedelta object
+            print("Enter Time: ")  # Prompt the user to enter a time
+            time_input = input()  # Get user input
+            hours, minutes, seconds = map(int, time_input.split(':'))  # Split the input into hours, minutes, and seconds
+            time_delta = datetime.timedelta(hours=hours, minutes=minutes, seconds=seconds)  # Create a timedelta object from the input
+            return time_delta  # Return the timedelta object
 
+        except ValueError:
+            # Handle the case where the input format is incorrect
+            print("Invalid input format. Please use the format HH:MM:SS")
+
+def get_all_package_ids(hash_table):
+    """
+    Get all package IDs from the hash table.
+    Args:
+    hash_table: Hash table containing the package IDs.
+    Returns:
+    List of all package IDs.
+    """
+    package_ids = []
+    for bucket in hash_table.table:  # Iterate through each bucket in the hash table
+        for key_value_pair in bucket:  # Iterate through each key-value pair in the bucket
+            package_id = key_value_pair[0]  # Assuming package_id is stored as the key
+            package_ids.append(package_id)  # Append the package ID to the list
+    return package_ids  # Return the list of all package IDs
 
 # Method that will sort the packages in each truck using nearest  algorithm
 # def optimized_delivery(truck):
@@ -370,16 +403,7 @@ class Main:
         print("3. Exit Program")
         user_input = input("Enter 1, 2, or 3: ")
         if user_input == "1":
-            print("Please Enter a time for the lookup. In format HH:MM:SS \n example: 12:00:00")
-            while True:
-                try:
-                    time_input = input()
-                    hours, minutes, seconds = map(int, time_input.split(':'))
-                    time_delta = datetime.timedelta(hours=hours, minutes=minutes, seconds=seconds)
-                    break
-                except ValueError:
-                    # Handle the case where the input format is incorrect
-                    print("Invalid input format. Please use the format HH:MM:SS")
+            time_delta = get_time_input()
             print(time_delta)
             print("Enter Package ID Number")
             # User inputs package ID as an integer
@@ -389,10 +413,21 @@ class Main:
             # Run solo package status report
             if package:
                 print(package.packageReport("status", time_delta))
+                #package.packageReport("status", time_delta)
                 input("Press Enter to Continue...")
             else:
                 print("Package Not Found")
+
+        # Lookup package status by time
         if user_input == "2":
-            timeLookup(PackageHashTable)
+            time_delta = get_time_input()
+            print(time_delta)
+            all_package_ids = get_all_package_ids(PackageHashTable)
+            for package_id in all_package_ids:  # Loop through all packages (
+                package=PackageHashTable.search(package_id)
+                print(package.packageReport("time", time_delta))
+            input("Press Enter to Continue...")
+
+        # Exit Program
         if user_input == "3":
             isExit = False
