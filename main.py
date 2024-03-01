@@ -380,7 +380,7 @@ class Main:
     loadPackageData(PACKAGE_FILE, PackageHashTable)
     optimized_delivery(truck1, distanceData)
     optimized_delivery(truck2, distanceData)
-    print (truck1.time, truck2.time)
+    # print (truck1.time, truck2.time)
     Truck3_Departure = min(truck1.time, truck2.time)  # Keep truck 3 at Hub until truck or Truck 1 Finish
     # print(Truck3_Departure)
     optimized_delivery(truck3, distanceData)
