@@ -69,6 +69,7 @@ def loadPackageData(packageFile, hashtable):
             weight = package[6]  # in KG
             status = "At Hub"
             note = package[7]
+            truck = None
 
             # Get the destination index from the address_id_map
             destination_index = int(99999999)
@@ -85,7 +86,8 @@ def loadPackageData(packageFile, hashtable):
                 weight,
                 status,
                 note,
-                destination_index
+                destination_index,
+                truck
             )
             # Debug print each package enter
             if Debug:
@@ -226,6 +228,7 @@ def optimized_delivery(truck, distance_data):
     truck.load.clear()  # Clear the truck's load for re-loading sorted packages
     for package in unsorted_packages:
         package.status = "En Route"  # Update package status to "En Route"
+        package.truck = f"Truck#: {truck.Id}"  # Update package's truck ID
     while unsorted_packages:
         # Find the next closest package to the current truck location
         closest_package, closest_distance = find_closest_package(truck.location, unsorted_packages, distance_data)
@@ -344,6 +347,7 @@ class Main:
     loadPackageData(PACKAGE_FILE, PackageHashTable)
     optimized_delivery(truck1, distanceData)
     optimized_delivery(truck2, distanceData)
+    print (truck1.time, truck2.time)
     Truck3_Departure = min(truck1.time, truck2.time)  # Keep truck 3 at Hub until truck or Truck 1 Finish
     # print(Truck3_Departure)
     optimized_delivery(truck3, distanceData)
@@ -367,16 +371,24 @@ class Main:
         user_input = input("Enter 1, 2, or 3: ")
         if user_input == "1":
             print("Please Enter a time for the lookup. In format HH:MM:SS \n example: 12:00:00")
-            time_input = input()
-            hours, minutes, seconds = map(int, time_input.split(':'))
-            time_delta = datetime.timedelta(hours=hours, minutes=minutes, seconds=seconds)
+            while True:
+                try:
+                    time_input = input()
+                    hours, minutes, seconds = map(int, time_input.split(':'))
+                    time_delta = datetime.timedelta(hours=hours, minutes=minutes, seconds=seconds)
+                    break
+                except ValueError:
+                    # Handle the case where the input format is incorrect
+                    print("Invalid input format. Please use the format HH:MM:SS")
             print(time_delta)
             print("Enter Package ID Number")
+            # User inputs package ID as an integer
             package_id = int(input())
+            # Lookup package by ID in hash table
             package = PackageHashTable.search(package_id)
+            # Run solo package status report
             if package:
-                package.status_update(time_delta)
-                print(package.packageLookup())
+                print(package.packageReport("status", time_delta))
                 input("Press Enter to Continue...")
             else:
                 print("Package Not Found")
