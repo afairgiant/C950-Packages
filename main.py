@@ -16,6 +16,7 @@ PACKAGE_FILE = "DeliveryData/Package_list.csv"
 # Set debug mode for print statements
 Debug = False
 
+
 # Define a function to read CSV files
 def read_csv(filename):
     with open(filename, "r") as csvfile:
@@ -53,7 +54,9 @@ def loadPackageData(packageFile, hashtable):
     """
 
     # Create a map of address to id
-    address_id_map = {address_data['Address']: address_data['Id'] for address_data in addressData}
+    address_id_map = {
+        address_data["Address"]: address_data["Id"] for address_data in addressData
+    }
 
     # Open the package file and read the data
     with open(packageFile) as packageList:
@@ -89,12 +92,12 @@ def loadPackageData(packageFile, hashtable):
                 note,
                 destination_index,
                 truck,
-                loadTime
+                loadTime,
             )
             # Debug print each package enter
             if Debug:
                 print(f"    DEBUG: package {package_object}")
-            #print(f"Inserting package: {package_object.package_id}")
+            # print(f"Inserting package: {package_object.package_id}")
             # Add each package to hash table
             hashtable.insert(package_id, package_object)
 
@@ -128,11 +131,11 @@ def loadDistanceData(file_path):
     Returns:
         list: A 2D list representing the distance matrix.
     """
-    with open(file_path, 'r') as file:
+    with open(file_path, "r") as file:
         lines = file.readlines()
 
     # Determine the number of points
-    header = lines[0].strip().split(',')
+    header = lines[0].strip().split(",")
     num_points = len(header) - 1  # Exclude the ID column
 
     # Initialize a 2D list with zeros
@@ -140,14 +143,16 @@ def loadDistanceData(file_path):
 
     # Process each line (excluding the header) to fill the 2D list
     for line in lines[1:]:  # Skip header
-        row = line.strip().split(',')
+        row = line.strip().split(",")
         point_id = int(row[0]) - 1  # Adjust for 0-indexing
 
         for i in range(1, len(row)):
             if row[i]:  # If there's a distance value
                 distance = float(row[i])
                 distance_matrix[point_id][i - 1] = distance
-                distance_matrix[i - 1][point_id] = distance  # Mirror the distance for bi-directionality
+                distance_matrix[i - 1][
+                    point_id
+                ] = distance  # Mirror the distance for bi-directionality
 
     return distance_matrix
 
@@ -164,10 +169,10 @@ def loadAddressData(file_path):
     """
     addressData = []
     try:
-        with open(file_path, 'r', encoding='utf-8') as file:
-            headers = file.readline().strip().split(',')
+        with open(file_path, "r", encoding="utf-8") as file:
+            headers = file.readline().strip().split(",")
             for line in file:
-                values = line.strip().split(',')
+                values = line.strip().split(",")
                 row_data = {header: value for header, value in zip(headers, values)}
                 addressData.append(row_data)
     except FileNotFoundError:
@@ -175,8 +180,6 @@ def loadAddressData(file_path):
         return []  # Return an empty list or handle the error as appropriate
 
     return addressData
-
-
 try:
     distanceData = loadDistanceData(DISTANCE_FILE)
     addressData = loadAddressData(ADDRESS_FILE)
@@ -204,12 +207,16 @@ def distanceBetween(index1, index2, distance_data):
     try:
         return float(distance_data[index1][index2])
     except IndexError:
-        print(f"     ERROR:One or both of the provided indices are out of bounds.\n"
-              f"    {index1} & {index2}")
+        print(
+            f"     ERROR:One or both of the provided indices are out of bounds.\n"
+            f"    {index1} & {index2}"
+        )
         raise IndexError("One or both of the provided indices are out of bounds.")
     except Exception as e:
         print(f"    ERROR: An error occurred: {str(e)}")
         raise e
+
+
 def optimized_delivery(truck, distance_data):
     """
     Optimize the delivery route for the given truck using the distance data.
@@ -225,7 +232,9 @@ def optimized_delivery(truck, distance_data):
     print(f"Starting Truck#{truck.Id}")
 
     # Convert truck load to package objects
-    unsorted_packages = [PackageHashTable.search(package_id) for package_id in truck.load]
+    unsorted_packages = [
+        PackageHashTable.search(package_id) for package_id in truck.load
+    ]
     truck.load.clear()  # Clear the truck's load for re-loading sorted packages
     for package in unsorted_packages:
         package.status = "En Route"  # Update package status to "En Route"
@@ -233,7 +242,9 @@ def optimized_delivery(truck, distance_data):
         package.loadTime = truck.departure_time  # Update package's load time
     while unsorted_packages:
         # Find the next closest package to the current truck location
-        closest_package, closest_distance = find_closest_package(truck.location, unsorted_packages, distance_data)
+        closest_package, closest_distance = find_closest_package(
+            truck.location, unsorted_packages, distance_data
+        )
 
         # Update truck and package status based on delivery
         deliver_package(truck, closest_package, closest_distance)
@@ -241,7 +252,7 @@ def optimized_delivery(truck, distance_data):
         # Remove the delivered package from unsorted list
         unsorted_packages.remove(closest_package)
     if Debug:
-    # Print truck end message with mileage
+        # Print truck end message with mileage
         print(f"Truck# {truck.Id} - Mileage: {truck.mileage}")
 
 
@@ -258,12 +269,17 @@ def find_closest_package(current_location, packages, distance_data):
     tuple: The closest package and the distance to it.
     """
     closest_package = None  # Initialize the closest package
-    closest_distance = float('inf')  # Initialize with infinity
+    closest_distance = float("inf")  # Initialize with infinity
 
     for package in packages:  # Iterate over the list of packages
-        distance = distanceBetween(current_location, package.destination_index, distance_data)  # Calculate the distance
+        distance = distanceBetween(
+            current_location, package.destination_index, distance_data
+        )  # Calculate the distance
         if distance < closest_distance:  # Update the closest package and distance
-            closest_package, closest_distance = package, distance  # Update the closest package
+            closest_package, closest_distance = (
+                package,
+                distance,
+            )  # Update the closest package
 
     return closest_package, closest_distance  # Return the closest package
 
@@ -295,9 +311,11 @@ def deliver_package(truck, package, distance):
     if Debug:
         print(f"Delivered Package {package.packageLookup()}")
 
+
 def calculate_delivery_time(distance, speed):
     """Calculate delivery time given distance and speed, returning a timedelta object."""
     return datetime.timedelta(hours=distance / speed)
+
 
 def get_time_input():
     """
@@ -309,13 +327,18 @@ def get_time_input():
         try:  # Try to convert the input to a datetime.timedelta object
             print("Enter Time: ")  # Prompt the user to enter a time
             time_input = input()  # Get user input
-            hours, minutes, seconds = map(int, time_input.split(':'))  # Split the input into hours, minutes, and seconds
-            time_delta = datetime.timedelta(hours=hours, minutes=minutes, seconds=seconds)  # Create a timedelta object from the input
+            hours, minutes, seconds = map(
+                int, time_input.split(":")
+            )  # Split the input into hours, minutes, and seconds
+            time_delta = datetime.timedelta(
+                hours=hours, minutes=minutes, seconds=seconds
+            )  # Create a timedelta object from the input
             return time_delta  # Return the timedelta object
 
         except ValueError:
             # Handle the case where the input format is incorrect
             print("Invalid input format. Please use the format HH:MM:SS")
+
 
 def get_all_package_ids(hash_table):
     """
@@ -327,10 +350,13 @@ def get_all_package_ids(hash_table):
     """
     package_ids = []
     for bucket in hash_table.table:  # Iterate through each bucket in the hash table
-        for key_value_pair in bucket:  # Iterate through each key-value pair in the bucket
+        for (
+            key_value_pair
+        ) in bucket:  # Iterate through each key-value pair in the bucket
             package_id = key_value_pair[0]  # Assuming package_id is stored as the key
             package_ids.append(package_id)  # Append the package ID to the list
     return package_ids  # Return the list of all package IDs
+
 
 # Method that will sort the packages in each truck using nearest  algorithm
 # def optimized_delivery(truck):
@@ -375,18 +401,24 @@ def get_all_package_ids(hash_table):
 #         print(f"Package {closest_package.lookup_package_info()} \n")
 #     print(f"Truck# {truck.Id} - Milage: {truck.mileage}")
 
+
 class Main:
     # Load CSV_Package into hash table
     loadPackageData(PACKAGE_FILE, PackageHashTable)
     optimized_delivery(truck1, distanceData)
     optimized_delivery(truck2, distanceData)
-    # print (truck1.time, truck2.time)
-    Truck3_Departure = min(truck1.time, truck2.time)  # Keep truck 3 at Hub until truck or Truck 1 Finish
-    # print(Truck3_Departure)
+    if Debug:
+        print (truck1.time, truck2.time)
+    Truck3_Departure = min(
+        truck1.time, truck2.time
+    )  # Keep truck 3 at Hub until truck or Truck 1 Finish
+    if Debug:
+        print(Truck3_Departure)
     optimized_delivery(truck3, distanceData)
 
-    print("\nWestern Governors University Parcel Service (WGUPS)")
+    # User Interface for package reports
     print("Loading Package Data")
+    print("\nWestern Governors University Parcel Service (WGUPS)")
 
     print(f"Total Mileage: {truck1.mileage + truck2.mileage + truck3.mileage}")
     print(f"Truck 1 Mileage: {truck1.mileage}")
@@ -413,21 +445,19 @@ class Main:
             # Run solo package status report
             if package:
                 print(package.packageReport("status", time_delta))
-                #package.packageReport("status", time_delta)
+                # package.packageReport("status", time_delta)
                 input("Press Enter to Continue...")
             else:
                 print("Package Not Found")
-
         # Lookup package status by time
         if user_input == "2":
             time_delta = get_time_input()
             print(time_delta)
             all_package_ids = get_all_package_ids(PackageHashTable)
             for package_id in all_package_ids:  # Loop through all packages (
-                package=PackageHashTable.search(package_id)
+                package = PackageHashTable.search(package_id)
                 print(package.packageReport("time", time_delta))
             input("Press Enter to Continue...")
-
         # Exit Program
         if user_input == "3":
             isExit = False

@@ -6,7 +6,10 @@
   <component name="ChangeListManager">
     <list default="true" id="2e7d02f8-3f44-4390-8ba6-cee9de26ca0b" name="Changes" comment="CSV read method creation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Reports/C950_Task-1_AF.docx" beforeDir="false" afterPath="$PROJECT_DIR$/Reports/C950_Task-1_AF.docx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/hashtable.py" beforeDir="false" afterPath="$PROJECT_DIR$/hashtable.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.py" beforeDir="false" afterPath="$PROJECT_DIR$/package.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,7 +33,7 @@
     <option name="selectedTabId" value="ProjectErrors" />
   </component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 7
+  &quot;associatedIndex&quot;: 0
 }</component>
   <component name="ProjectId" id="2bk6Rk6CFSWgUEMaXq4rrgwAyDA" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -52,7 +55,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.CSV/TSV/PSV&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
@@ -111,6 +114,9 @@
       <workItem from="1709239230937" duration="6890000" />
       <workItem from="1709297352751" duration="12577000" />
       <workItem from="1709310094060" duration="27000" />
+      <workItem from="1709311450207" duration="2936000" />
+      <workItem from="1709506768446" duration="221000" />
+      <workItem from="1709506997838" duration="3022000" />
     </task>
     <task id="LOCAL-00001" summary="CSV read method creation">
       <option name="closed" value="true" />
@@ -142,7 +148,7 @@
     <option name="LAST_COMMIT_MESSAGE" value="CSV read method creation" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/C950_Packages$main.coverage" NAME="main Coverage Results" MODIFIED="1709309232813" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/C950_Packages$main.coverage" NAME="main Coverage Results" MODIFIED="1709508068434" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/C950_Task1$main.coverage" NAME="main Coverage Results" MODIFIED="1707077592974" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

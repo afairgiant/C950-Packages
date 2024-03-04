@@ -1,7 +1,6 @@
 # Class representing packages
 from datetime import timedelta
 
-
 class Package:
     def __init__(
             self,
