@@ -1,6 +1,6 @@
 # Hashtable class with Chaining
 """
-Create and search a hash table of packages. The hash table is sized at start by ...
+Create and search a hash table of packages. The hash table is sized at start by passed variable
 """
 # Set debug mode for print statements
 Debug = False
@@ -9,11 +9,11 @@ Debug = False
 class ChainingHashTable:
     # Constructor with optional initial capacity parameter.
     # Assigns all buckets with an empty list.
-    def __init__(self, initial_capacity=40):
+
+    def __init__(self, initial_capacity):
         # initialize the hash table with empty bucket list entries.
         self.table = []
-        for i in range(initial_capacity):
-            self.table.append([])
+        self.table = [[] for _ in range(initial_capacity)]
 
     # Citing source: WGU code repository W-2_ChainingHashTable_zyBooks_Key-Value_CSV_Greedy.py
     def insert(self, key, item):  # does both insert and update
@@ -42,7 +42,8 @@ class ChainingHashTable:
         # get the bucket list where this key would be.
         bucket = hash(key) % len(self.table)
         bucket_list = self.table[bucket]
-        # print(bucket_list)
+        if Debug:
+            print(bucket_list)
 
         # search for the key in the bucket list
         for kv in bucket_list:
