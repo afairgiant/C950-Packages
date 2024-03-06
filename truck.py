@@ -1,4 +1,7 @@
 # Class represent delivery Trucks
+"""
+This file contains the Truck class, which represents the vehicle used for the delivery.
+"""
 
 
 class Truck:

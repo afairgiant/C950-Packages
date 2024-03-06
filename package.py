@@ -1,21 +1,44 @@
 # Class representing packages
 from datetime import timedelta
+"""
+This file contains the Package class, which represents the packages
+that will be delivered.
+"""
+Debug = False
+
 
 class Package:
+    """
+    Initializes the package with the given parameters.
+
+    Args:
+        package_id (int): The unique ID of the package.
+        address (str): The address of the package.
+        city (str): The city of the package.
+        state (str): The state of the package.
+        zipcode (str): The zip code of the package.
+        deadline_time (str): The deadline time of the package.
+        weight (str): The weight of the package in kg.
+        status (str): The status of the package (e.g., at hub, loaded, en route, delivered).
+        note (str): The note related to the package.
+        destination_index (int): The index of the destination.
+        truck (str): The truck assigned to the package.
+        loadTime (str): The load time of the package.
+    """
     def __init__(
-            self,
-            package_id,
-            address,
-            city,
-            state,
-            zipcode,
-            deadline_time,
-            weight,
-            status,
-            note,
-            destination_index,
-            truck,
-            loadTime
+        self,
+        package_id,
+        address,
+        city,
+        state,
+        zipcode,
+        deadline_time,
+        weight,
+        status,
+        note,
+        destination_index,
+        truck,
+        loadTime,
     ):
         self.package_id = package_id
         self.address = address
@@ -28,7 +51,7 @@ class Package:
         self.delivery_time = None  # Only used when delivered.
         self.note = note
         self.destination_index = int(destination_index)
-        self.truck = None # Only used when loaded
+        self.truck = None  # Only used when loaded
         self.loadTime = None
 
     def __str__(self):
@@ -46,10 +69,16 @@ class Package:
         )
 
     def status_update(self, current_datetime):
+        """
+        Updates the status of the package based on the current time.
+
+        Parameters:
+        current_datetime (datetime): The current date and time.
+
+        Returns:
+        None
+        """
         loadTime = self.loadTime
-        #print(self.delivery_time)
-        #print(self.loadTime)
-        #print(current_datetime)
         # Update package status
         if current_datetime < loadTime:
             self.status = "At Hub"
@@ -62,7 +91,16 @@ class Package:
         else:
             self.status = "Contact Support"
 
-    def packageLookup(self):
+    def formatpackagedetails(self):
+        """
+        Returns a formatted string containing the details of the package.
+
+        The details include the package ID, delivery address, delivery deadline,
+        delivery city, delivery zip code, package weight, delivery status, and delivery time.
+
+        Returns:
+            str: A string containing the details of the package.
+        """
         return (
             f"Package ID: {self.package_id}\n"
             f"Delivery Address: {self.address}\n"
@@ -73,25 +111,49 @@ class Package:
             f"Delivery Status: {self.status}\n"
             f"Delivery Time: {self.delivery_time if self.delivery_time is not None else ' '}\n"
         )
+
     def reportDeliveryTime(self, current_datetime):
+        """
+        Reports the delivery time of the package based on the current date and time.
+
+        Parameters:
+            current_datetime (datetime): The current date and time.
+
+        Returns:
+            str: A string containing the delivery time of the package.
+            If the package has been delivered, the delivery time is returned. Otherwise, the estimated delivery time is returned.
+        """
         if self.delivery_time < current_datetime:
-            # print("Package has been delivered")
+            if Debug:
+                print("Package has been delivered")
             report_DeliveryTime = f"Delivery Time: {self.delivery_time}"
 
         else:
-            # print("Package has not been delivered")
+            if Debug:
+                print("Package has not been delivered")
             # If package hasn't been delivered show estimated time
             report_DeliveryTime = f"Estimated Delivery Time: {self.delivery_time}"
 
         return report_DeliveryTime
+
     def packageReport(self, reportType, current_datetime):
+        """
+        Report the package details based on the specified report type.
+
+        Parameters:
+            reportType (str): The type of report to generate. Valid options are "status" and "time".
+            current_datetime (datetime): The current date and time.
+
+        Returns:
+            str: A formatted string containing the package details based on the specified report type.
+        """
         # Report package status
         reportDelivery = self.reportDeliveryTime(current_datetime)
         self.status_update(current_datetime)
 
         if reportType == "status":
             return (
-                f"\033[4mPackage Report for package #{self.package_id}\033[0m\n"
+                f"\033[4mPackage Report for Package #{self.package_id}\033[0m\n"
                 f"Package ID: {self.package_id}\n"
                 f"Delivery Deadline: {self.deadline_time}\n"
                 f"Delivery Address: {self.address}\n"
@@ -102,8 +164,11 @@ class Package:
                 f"{reportDelivery}"
             )
         elif reportType == "time":
+            return f"Package ID: {self.package_id} Delivery Status: {self.status}. {reportDelivery}"
+        elif reportType == "truck":
             return (
-                f"Package ID: {self.package_id} Delivery Status: {self.status}. {reportDelivery}"
+                f"\033[fmPackage Report for Truck #"
+                # TODO: finish creating a report to show status of packages per truck at given time.
             )
         else:
-            pass
+            print("Houston we have a problem...")

@@ -12,7 +12,7 @@ class ChainingHashTable:
 
     def __init__(self, initial_capacity):
         # initialize the hash table with empty bucket list entries.
-        self.table = []
+        self.table = [None] * initial_capacity
         self.table = [[] for _ in range(initial_capacity)]
 
     # Citing source: WGU code repository W-2_ChainingHashTable_zyBooks_Key-Value_CSV_Greedy.py
