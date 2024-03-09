@@ -104,21 +104,28 @@ def loadPackageData(packageFile, hashtable):
 # Truck Info
 TruckSpeed = 18  # Constant Speed per task parameters
 TruckCapacity = 16  # Constant max capacity per task parameters
-Truck1_Load = [2, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20]
-Truck2_Load = [1, 3, 6, 18, 35, 36, 37, 38, 39, 40]
-Truck3_Load = [9, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34]
+#Truck1_Load = [2, 5, 7, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20]
+Truck1_Load = [4, 13, 14, 15, 16, 19, 20, 27, 31, 34, 40]
+Truck2_Load = [1, 3, 6, 8, 18, 25, 29, 30, 36, 37, 38]
+Truck3_Load = [2, 5, 8, 9, 19, 21, 22, 23, 24, 26, 28, 32, 33]
+
+#if Debug:
+print("Number of items in Truck1_Load:", len(Truck1_Load))
+print("Number of items in Truck2_Load:", len(Truck2_Load))
+print("Number of items in Truck3_Load:", len(Truck3_Load))
+
 Truck1_Departure = datetime.timedelta(hours=8)
-Truck2_Departure = datetime.timedelta(hours=10)
-Truck3_Departure = datetime.timedelta(hours=12)
+Truck2_Departure = datetime.timedelta(hours=9, minutes=6)
+Truck3_Departure = datetime.timedelta(hours=10, minutes=30)
 
 # Create Trucks
-truck1 = Truck(1, TruckCapacity, TruckSpeed, Truck1_Load, 0.0, 1, Truck1_Departure)
+truck1 = Truck(1, TruckCapacity, TruckSpeed, Truck1_Load, 0.0, 0, Truck1_Departure)
 if Debug:
     print(f"Truck #1 {truck1}")
-truck2 = Truck(2, TruckCapacity, TruckSpeed, Truck2_Load, 0.0, 1, Truck2_Departure)
+truck2 = Truck(2, TruckCapacity, TruckSpeed, Truck2_Load, 0.0, 0, Truck2_Departure)
 if Debug:
     print(f"Truck #2 {truck2}")
-truck3 = Truck(3, TruckCapacity, TruckSpeed, Truck3_Load, 0.0, 1, Truck3_Departure)
+truck3 = Truck(3, TruckCapacity, TruckSpeed, Truck3_Load, 0.0, 0, Truck3_Departure)
 if Debug:
     print(f"Truck #3 {truck3}")
 
@@ -155,7 +162,7 @@ def loadDistanceData(file_path):
                 distance_matrix[i - 1][
                     point_id
                 ] = distance  # Mirror the distance for bi-directionality
-
+    print(distance_matrix)
     return distance_matrix
 
 
@@ -209,6 +216,8 @@ def distanceBetween(index1, index2, distance_data):
     float or str: The distance between the two locations, or an error message if the indices are out of bounds.
     """
     try:
+        if Debug:
+            print (f"Calculating distance between {index1} & {index2}")
         return float(distance_data[index1][index2])
     except IndexError:
         print(
@@ -262,7 +271,7 @@ def optimized_delivery(truck, distance_data):
 
 def find_closest_package(current_location, packages, distance_data):
     """
-    Find the closest package to the current location.
+    Find the next closest package to the current location.
 
     Args:
     current_location (int): The current location index.
@@ -276,6 +285,7 @@ def find_closest_package(current_location, packages, distance_data):
     closest_distance = float("inf")  # Initialize with infinity
 
     for package in packages:  # Iterate over the list of packages
+        #print(f"package: {package}")
         distance = distanceBetween(
             current_location, package.destination_index, distance_data
         )  # Calculate the distance
@@ -283,8 +293,8 @@ def find_closest_package(current_location, packages, distance_data):
             closest_package, closest_distance = (
                 package,
                 distance,
-            )  # Update the closest package
-
+            )
+    print(f"closest_package: {closest_package}, closest_distance: {closest_distance}")
     return closest_package, closest_distance  # Return the closest package
 
 
@@ -309,7 +319,7 @@ def deliver_package(truck, package, distance):
 
     package.delivery_time = truck.time
     package.status = "Delivered"
-
+    on_time_check(package)
     if Debug:
         print(f"Delivered Package {package.formatpackagedetails()}")
 
@@ -318,7 +328,40 @@ def calculate_delivery_time(distance, speed):
     """Calculate delivery time given distance and speed, returning a timedelta object."""
     return datetime.timedelta(hours=distance / speed)
 
+def on_time_check(package):
+    if package.deadline_time == "EOD":
+        deadline_time = datetime.timedelta(hours=17)  # 5 PM
+    else:
+        deadline_time = convert_time_str(package.deadline_time)
 
+    # Check if the package delivery time is after the deadline
+    if package.delivery_time > deadline_time:
+        print(f"Package# {package.package_id} is late")
+        print(f"""Deadline: {package.deadline_time} - Delivery: {package.delivery_time}""")
+    else:
+        if Debug:
+            print(f"Package# {package.package_id}  is on time")
+            print(f"""Deadline: {package.deadline_time} - Delivery: {package.delivery_time}""")
+def convert_time_str(time_str):
+    """Convert deadline time string to datetime object."""
+    if time_str == "EOD":
+        return datetime.timedelta(hours=17)  # 5 PM
+
+    # Split the time string by space to separate the time and the AM/PM part
+    time_part, am_pm = time_str.split()
+
+    # Split the time part by ":" to get hours and minutes
+    hours, minutes = map(int, time_part.split(":"))
+
+    # Adjust hours for PM times
+    if am_pm.upper() == 'PM' and hours != 12:
+        hours += 12
+    elif am_pm.upper() == 'AM' and hours == 12:
+        hours = 0  # Midnight is represented as 0 hours in 24-hour time format
+
+    # Create timedelta object
+    datetime_time = datetime.timedelta(hours=hours, minutes=minutes)
+    return datetime_time
 def get_time_input():
     """
     A function that prompts the user to input a time in the format HH:MM:SS,

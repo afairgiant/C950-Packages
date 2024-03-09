@@ -1,5 +1,6 @@
 # Class representing packages
 from datetime import timedelta
+
 """
 This file contains the Package class, which represents the packages
 that will be delivered.
@@ -25,20 +26,21 @@ class Package:
         truck (str): The truck assigned to the package.
         loadTime (str): The load time of the package.
     """
+
     def __init__(
-        self,
-        package_id,
-        address,
-        city,
-        state,
-        zipcode,
-        deadline_time,
-        weight,
-        status,
-        note,
-        destination_index,
-        truck,
-        loadTime,
+            self,
+            package_id,
+            address,
+            city,
+            state,
+            zipcode,
+            deadline_time,
+            weight,
+            status,
+            note,
+            destination_index,
+            truck,
+            loadTime,
     ):
         self.package_id = package_id
         self.address = address
@@ -172,3 +174,5 @@ class Package:
             )
         else:
             print("Houston we have a problem...")
+
+
