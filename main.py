@@ -318,7 +318,41 @@ def calculate_delivery_time(distance, speed):
     """Calculate delivery time given distance and speed, returning a timedelta object."""
     return datetime.timedelta(hours=distance / speed)
 
+def on_time_check(package):
+    if package.deadline_time == "EOD":
+        deadline_time = datetime.timedelta(hours=17)  # 5 PM
+    else:
+        deadline_time = convert_time_str(package.deadline_time)
 
+    # Check if the package delivery time is after the deadline
+    if package.delivery_time > deadline_time:
+        print(f"Package# {package.package_id} is late")
+        print(f"""Deadline: {package.deadline_time} - Delivery: {package.delivery_time}""")
+    else:
+        if Debug:
+            print(f"Package# {package.package_id}  is on time")
+            print(f"""Deadline: {package.deadline_time} - Delivery: {package.delivery_time}""")
+
+def convert_time_str(time_str):
+    """Convert deadline time string to datetime object."""
+    if time_str == "EOD":
+        return datetime.timedelta(hours=17)  # 5 PM
+
+    # Split the time string by space to separate the time and the AM/PM part
+    time_part, am_pm = time_str.split()
+
+    # Split the time part by ":" to get hours and minutes
+    hours, minutes = map(int, time_part.split(":"))
+
+    # Adjust hours for PM times
+    if am_pm.upper() == 'PM' and hours != 12:
+        hours += 12
+    elif am_pm.upper() == 'AM' and hours == 12:
+        hours = 0  # Midnight is represented as 0 hours in 24-hour time format
+
+    # Create timedelta object
+    datetime_time = datetime.timedelta(hours=hours, minutes=minutes)
+    return datetime_time
 def get_time_input():
     """
     A function that prompts the user to input a time in the format HH:MM:SS,
