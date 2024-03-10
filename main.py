@@ -311,7 +311,7 @@ def deliver_package(truck, package, distance):
 
     package.delivery_time = truck.time
     package.status = "Delivered"
-
+    on_time_check(package)
     if Debug:
         print(f"Delivered Package {package.formatpackagedetails()}")
 
