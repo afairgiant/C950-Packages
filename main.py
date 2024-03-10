@@ -109,7 +109,7 @@ Truck2_Load = [1, 3, 6, 18, 35, 36, 37, 38, 39, 40]
 Truck3_Load = [9, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34]
 Truck1_Departure = datetime.timedelta(hours=8)
 Truck2_Departure = datetime.timedelta(hours=9, minutes=6)
-Truck3_Departure = datetime.timedelta(hours=12)
+Truck3_Departure = datetime.timedelta(hours=10, minutes=30)
 
 # Create Trucks
 truck1 = Truck(1, TruckCapacity, TruckSpeed, Truck1_Load, 0.0, 1, Truck1_Departure)
