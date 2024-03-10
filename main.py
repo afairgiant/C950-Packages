@@ -209,6 +209,8 @@ def distanceBetween(index1, index2, distance_data):
     float or str: The distance between the two locations, or an error message if the indices are out of bounds.
     """
     try:
+        if Debug:
+            print(f"Calculating distance between {index1} & {index2}")
         return float(distance_data[index1][index2])
     except IndexError:
         print(
