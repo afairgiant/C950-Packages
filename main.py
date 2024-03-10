@@ -105,20 +105,20 @@ def loadPackageData(packageFile, hashtable):
 TruckSpeed = 18  # Constant Speed per task parameters
 TruckCapacity = 16  # Constant max capacity per task parameters
 Truck1_Load = [2, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20]
-Truck2_Load = [1, 3, 6, 18, 35, 36, 37, 38, 39, 40]
-Truck3_Load = [9, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34]
+Truck2_Load = [1, 3, 6, 18, 25, 29, 35, 36, 37, 38, 39, 40]
+Truck3_Load = [9, 21, 22, 23, 24, 26, 27, 28, 30, 31, 32, 33, 34]
 Truck1_Departure = datetime.timedelta(hours=8)
 Truck2_Departure = datetime.timedelta(hours=9, minutes=6)
 Truck3_Departure = datetime.timedelta(hours=10, minutes=30)
 
 # Create Trucks
-truck1 = Truck(1, TruckCapacity, TruckSpeed, Truck1_Load, 0.0, 1, Truck1_Departure)
+truck1 = Truck(1, TruckCapacity, TruckSpeed, Truck1_Load, 0.0, 0, Truck1_Departure)
 if Debug:
     print(f"Truck #1 {truck1}")
-truck2 = Truck(2, TruckCapacity, TruckSpeed, Truck2_Load, 0.0, 1, Truck2_Departure)
+truck2 = Truck(2, TruckCapacity, TruckSpeed, Truck2_Load, 0.0, 0, Truck2_Departure)
 if Debug:
     print(f"Truck #2 {truck2}")
-truck3 = Truck(3, TruckCapacity, TruckSpeed, Truck3_Load, 0.0, 1, Truck3_Departure)
+truck3 = Truck(3, TruckCapacity, TruckSpeed, Truck3_Load, 0.0, 0, Truck3_Departure)
 if Debug:
     print(f"Truck #3 {truck3}")
 
