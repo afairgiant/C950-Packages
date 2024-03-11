@@ -104,13 +104,16 @@ def loadPackageData(packageFile, hashtable):
 # Truck Info
 TruckSpeed = 18  # Constant Speed per task parameters
 TruckCapacity = 16  # Constant max capacity per task parameters
-Truck1_Load = [2, 4, 5, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 19, 20]
+Truck1_Load = [4, 7, 8, 10, 12, 13, 14, 15, 16, 17, 19, 20, 30, 31, 34]
 Truck2_Load = [1, 3, 6, 18, 25, 29, 35, 36, 37, 38, 39, 40]
-Truck3_Load = [9, 21, 22, 23, 24, 26, 27, 28, 30, 31, 32, 33, 34]
+Truck3_Load = [2, 5, 9, 11, 21, 22, 23, 24, 26, 27, 28, 32, 33]
 Truck1_Departure = datetime.timedelta(hours=8)
 Truck2_Departure = datetime.timedelta(hours=9, minutes=6)
 Truck3_Departure = datetime.timedelta(hours=10, minutes=30)
-
+if Debug:
+    print("Number of items in Truck1_Load:", len(Truck1_Load))
+    print("Number of items in Truck2_Load:", len(Truck2_Load))
+    print("Number of items in Truck3_Load:", len(Truck3_Load))
 # Create Trucks
 truck1 = Truck(1, TruckCapacity, TruckSpeed, Truck1_Load, 0.0, 0, Truck1_Departure)
 if Debug:
@@ -236,7 +239,8 @@ def optimized_delivery(truck, distance_data):
     """
     # Print truck start message
     print(f"Starting Truck#{truck.Id}")
-
+    if truck.capacity < len(truck.load):
+        print(f"****STOP**** Too Many Packages in Truck#{truck.Id}")
     # Convert truck load to package objects
     unsorted_packages = [
         PackageHashTable.search(package_id) for package_id in truck.load
@@ -320,6 +324,7 @@ def calculate_delivery_time(distance, speed):
     """Calculate delivery time given distance and speed, returning a timedelta object."""
     return datetime.timedelta(hours=distance / speed)
 
+
 def on_time_check(package):
     if package.deadline_time == "EOD":
         deadline_time = datetime.timedelta(hours=17)  # 5 PM
@@ -334,6 +339,7 @@ def on_time_check(package):
         if Debug:
             print(f"Package# {package.package_id}  is on time")
             print(f"""Deadline: {package.deadline_time} - Delivery: {package.delivery_time}""")
+
 
 def convert_time_str(time_str):
     """Convert deadline time string to datetime object."""
@@ -355,6 +361,8 @@ def convert_time_str(time_str):
     # Create timedelta object
     datetime_time = datetime.timedelta(hours=hours, minutes=minutes)
     return datetime_time
+
+
 def get_time_input():
     """
     A function that prompts the user to input a time in the format HH:MM:SS,
@@ -389,7 +397,7 @@ def get_all_package_ids(hash_table):
     package_ids = []
     for bucket in hash_table.table:  # Iterate through each bucket in the hash table
         for (
-            key_value_pair
+                key_value_pair
         ) in bucket:  # Iterate through each key-value pair in the bucket
             package_id = key_value_pair[0]  # Assuming package_id is stored as the key
             package_ids.append(package_id)  # Append the package ID to the list
@@ -440,16 +448,17 @@ class Main:
     while isExit:
         print("\nPackage Lookup\n")
 
-        print("1. Package Lookup by ID")
-        print("2. Package Lookup by Time")
-        print("3. Exit Program")
+        print('1. Package Status Lookup by ID\n'
+              '2. Package Status Lookup by Time\n'
+              '3. Exit Program')
         user_input = input("Enter 1, 2, or 3: ")
         if user_input == "1":
-            time_delta = get_time_input()
-            print(time_delta)
             print("Enter Package ID Number")
             # User inputs package ID as an integer
             package_id = int(input())
+            # User inputs time to check status at
+            time_delta = get_time_input()
+            print(time_delta)
             # Lookup package by ID in hash table
             package = PackageHashTable.search(package_id)
             # Run solo package status report
@@ -461,6 +470,7 @@ class Main:
                 print("Package Not Found")
         # Lookup package status by time
         elif user_input == "2":
+            # User inputs time to check status of all packages
             time_delta = get_time_input()
             print(time_delta)
             all_package_ids = get_all_package_ids(PackageHashTable)

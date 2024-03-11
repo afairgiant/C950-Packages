@@ -4,8 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2e7d02f8-3f44-4390-8ba6-cee9de26ca0b" name="Changes" comment="Report work">
-      <change beforePath="$PROJECT_DIR$/Reports/C950_Task-2_AF.docx" beforeDir="false" afterPath="$PROJECT_DIR$/Reports/C950_Task-2_AF.docx" afterDir="false" />
+    <list default="true" id="2e7d02f8-3f44-4390-8ba6-cee9de26ca0b" name="Changes" comment="Package reports clean up">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/DeliveryData/Package_list.csv" beforeDir="false" afterPath="$PROJECT_DIR$/DeliveryData/Package_list.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.py" beforeDir="false" afterPath="$PROJECT_DIR$/package.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -152,7 +155,71 @@
       <option name="project" value="LOCAL" />
       <updated>1709691898381</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Report work">
+      <option name="closed" value="true" />
+      <created>1709942819009</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1709942819009</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Add on_time_check method.">
+      <option name="closed" value="true" />
+      <created>1710114095533</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1710114095533</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Added Debug print statements">
+      <option name="closed" value="true" />
+      <created>1710114160013</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1710114160013</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Modified Truck Departure times">
+      <option name="closed" value="true" />
+      <created>1710114209913</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1710114209913</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Modified Truck Departure times">
+      <option name="closed" value="true" />
+      <created>1710114234527</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1710114234527</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Modified Truck Departure times">
+      <option name="closed" value="true" />
+      <created>1710114238927</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1710114238927</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Modified Truck starting loads and starting point">
+      <option name="closed" value="true" />
+      <created>1710114384578</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1710114384578</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Added on_time_check to deliver package">
+      <option name="closed" value="true" />
+      <created>1710114416609</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1710114416609</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -173,7 +240,13 @@
     <MESSAGE value="CSV read method creation" />
     <MESSAGE value="Improved __init__" />
     <MESSAGE value="Report work" />
-    <option name="LAST_COMMIT_MESSAGE" value="Report work" />
+    <MESSAGE value="Add on_time_check method." />
+    <MESSAGE value="Added Debug print statements" />
+    <MESSAGE value="Modified Truck Departure times" />
+    <MESSAGE value="Modified Truck starting loads and starting point" />
+    <MESSAGE value="Added on_time_check to deliver package" />
+    <MESSAGE value="Package reports clean up" />
+    <option name="LAST_COMMIT_MESSAGE" value="Package reports clean up" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/C950_Packages$main.coverage" NAME="main Coverage Results" MODIFIED="1709508068434" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

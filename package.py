@@ -1,5 +1,7 @@
 # Class representing packages
+import datetime
 from datetime import timedelta
+
 """
 This file contains the Package class, which represents the packages
 that will be delivered.
@@ -25,20 +27,21 @@ class Package:
         truck (str): The truck assigned to the package.
         loadTime (str): The load time of the package.
     """
+
     def __init__(
-        self,
-        package_id,
-        address,
-        city,
-        state,
-        zipcode,
-        deadline_time,
-        weight,
-        status,
-        note,
-        destination_index,
-        truck,
-        loadTime,
+            self,
+            package_id,
+            address,
+            city,
+            state,
+            zipcode,
+            deadline_time,
+            weight,
+            status,
+            note,
+            destination_index,
+            truck,
+            loadTime,
     ):
         self.package_id = package_id
         self.address = address
@@ -79,9 +82,14 @@ class Package:
         None
         """
         loadTime = self.loadTime
+
         # Update package status
         if current_datetime < loadTime:
-            self.status = "At Hub"
+            # Account for packages delayed on flight in
+            if self.package_id in [6, 25, 28, 32]:
+                self.status = "Delayed on flight"
+            else:
+                self.status = "At Hub"
         elif current_datetime == loadTime:
             self.status = "Loaded on " + self.truck
         elif loadTime < current_datetime < self.delivery_time:
@@ -126,15 +134,15 @@ class Package:
         if self.delivery_time < current_datetime:
             if Debug:
                 print("Package has been delivered")
-            report_DeliveryTime = f"Delivery Time: {self.delivery_time}"
+            report_delivery_time = f"Delivered at: {self.delivery_time} on {self.truck}"
 
         else:
             if Debug:
                 print("Package has not been delivered")
             # If package hasn't been delivered show estimated time
-            report_DeliveryTime = f"Estimated Delivery Time: {self.delivery_time}"
+            report_delivery_time = f"Estimated Delivery Time: {self.delivery_time} on {self.truck}"
 
-        return report_DeliveryTime
+        return report_delivery_time
 
     def packageReport(self, reportType, current_datetime):
         """
@@ -152,23 +160,32 @@ class Package:
         self.status_update(current_datetime)
 
         if reportType == "status":
-            return (
-                f"\033[4mPackage Report for Package #{self.package_id}\033[0m\n"
-                f"Package ID: {self.package_id}\n"
-                f"Delivery Deadline: {self.deadline_time}\n"
-                f"Delivery Address: {self.address}\n"
-                f"Delivery City: {self.city}\n"
-                f"Delivery Zip Code: {self.zipcode}\n"
-                f"Package Weight: {self.weight}\n"
-                f"Delivery Status: {self.status}\n"
-                f"{reportDelivery}"
-            )
+            status_report = (f"\033[4mPackage Report for Package #{self.package_id}\033[0m\n"
+                             f"Package ID: {self.package_id}\n"
+                             f"Delivery Deadline: {self.deadline_time}\n"
+                             f"Delivery Address: {self.address}\n"
+                             f"Delivery City: {self.city}\n"
+                             f"Delivery Zip Code: {self.zipcode}\n"
+                             f"Package Weight: {self.weight}\n"
+                             f"Delivery Status: {self.status}\n"
+                             f"{reportDelivery}")
+
+            return status_report
+
         elif reportType == "time":
-            return f"Package ID: {self.package_id} Delivery Status: {self.status}. {reportDelivery}"
+            time_report = (f"Package ID: {self.package_id}\n"
+                           f"   Delivery Deadline: {self.deadline_time}\n"
+                           f"   Delivery Address: {self.address} {self.city} {self.zipcode}\n"
+                           f"   Delivery Status: {self.status}.\n"
+                           f"   {reportDelivery}"
+                           )
+
+            return time_report
+
         elif reportType == "truck":
             return (
                 f"\033[fmPackage Report for Truck #"
-                # TODO: finish creating a report to show status of packages per truck at given time.
+                # TODO: create a report to show status of packages per truck at a given time.
             )
         else:
             print("Houston we have a problem...")
