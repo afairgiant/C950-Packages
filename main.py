@@ -315,7 +315,7 @@ def deliver_package(truck, package, distance):
 
     package.delivery_time = truck.time
     package.status = "Delivered"
-    on_time_check(package)
+    on_time_check(package) # Check if package was delivered ontime
     if Debug:
         print(f"Delivered Package {package.formatpackagedetails()}")
 
@@ -323,22 +323,6 @@ def deliver_package(truck, package, distance):
 def calculate_delivery_time(distance, speed):
     """Calculate delivery time given distance and speed, returning a timedelta object."""
     return datetime.timedelta(hours=distance / speed)
-
-
-def on_time_check(package):
-    if package.deadline_time == "EOD":
-        deadline_time = datetime.timedelta(hours=17)  # 5 PM
-    else:
-        deadline_time = convert_time_str(package.deadline_time)
-
-    # Check if the package delivery time is after the deadline
-    if package.delivery_time > deadline_time:
-        print(f"Package# {package.package_id} is late")
-        print(f"""Deadline: {package.deadline_time} - Delivery: {package.delivery_time}""")
-    else:
-        if Debug:
-            print(f"Package# {package.package_id}  is on time")
-            print(f"""Deadline: {package.deadline_time} - Delivery: {package.delivery_time}""")
 
 
 def convert_time_str(time_str):
@@ -362,6 +346,20 @@ def convert_time_str(time_str):
     datetime_time = datetime.timedelta(hours=hours, minutes=minutes)
     return datetime_time
 
+def on_time_check(package):
+    if package.deadline_time == "EOD":
+        deadline_time = datetime.timedelta(hours=17)  # 5 PM / EOD
+    else:
+        deadline_time = convert_time_str(package.deadline_time)
+
+    # Check if the package delivery time is after the deadline
+    if package.delivery_time > deadline_time:
+        print(f"Package# {package.package_id} is late")
+        print(f"""Deadline: {package.deadline_time} - Delivery: {package.delivery_time}""")
+    else:
+        if Debug:
+            print(f"Package# {package.package_id}  is on time")
+            print(f"""Deadline: {package.deadline_time} - Delivery: {package.delivery_time}""")
 
 def get_time_input():
     """

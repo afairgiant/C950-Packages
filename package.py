@@ -129,7 +129,8 @@ class Package:
 
         Returns:
             str: A string containing the delivery time of the package.
-            If the package has been delivered, the delivery time is returned. Otherwise, the estimated delivery time is returned.
+            If the package has been delivered, the delivery time is returned.
+            Otherwise, the estimated delivery time is returned.
         """
         if self.delivery_time < current_datetime:
             if Debug:
@@ -189,3 +190,4 @@ class Package:
             )
         else:
             print("Houston we have a problem...")
+
