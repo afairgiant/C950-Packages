@@ -2,8 +2,6 @@
 import datetime
 from datetime import timedelta
 
-from main import convert_time_str, Debug
-
 """
 This file contains the Package class, which represents the packages
 that will be delivered.
@@ -131,8 +129,7 @@ class Package:
 
         Returns:
             str: A string containing the delivery time of the package.
-            If the package has been delivered, the delivery time is returned.
-            Otherwise, the estimated delivery time is returned.
+            If the package has been delivered, the delivery time is returned. Otherwise, the estimated delivery time is returned.
         """
         if self.delivery_time < current_datetime:
             if Debug:
@@ -192,18 +189,3 @@ class Package:
             )
         else:
             print("Houston we have a problem...")
-
-    def on_time_check(package):
-        if package.deadline_time == "EOD":
-            deadline_time = datetime.timedelta(hours=17)  # 5 PM / EOD
-        else:
-            deadline_time = convert_time_str(package.deadline_time)
-
-        # Check if the package delivery time is after the deadline
-        if package.delivery_time > deadline_time:
-            print(f"Package# {package.package_id} is late")
-            print(f"""Deadline: {package.deadline_time} - Delivery: {package.delivery_time}""")
-        else:
-            if Debug:
-                print(f"Package# {package.package_id}  is on time")
-                print(f"""Deadline: {package.deadline_time} - Delivery: {package.delivery_time}""")
